@@ -114,7 +114,7 @@ header "Checking for pip ..."
 command -v pip >/dev/null 2>&1 || { 
     task "Unable to locate pip."
     task "Installing Pip"
-    sudo apt-get install python-pip >> install_log
+    sudo apt-get install -y python-pip >> install_log
     subtask "done"
 }
 
@@ -141,16 +141,20 @@ fi
 
 header "Installing Anaconda Python distribution ..."
 echo
-echo "*** NOTE *** When asked to update your PATH, you should respond YES."
-read -p "Press [ENTER] to continue ..."
 
-cd
 task "Downloading Anaconda ..."
 wget -O Anaconda-1.9.2-Linux-x86_64.sh "http://repo.continuum.io/archive/Anaconda-1.9.2-Linux-x86_64.sh" 2>> install_log
 subtask "done"
 
 task "Installing ..."
-bash Anaconda-1.9.2-Linux-x86_64.sh
+if [ $WITH_INTERACT == 1 ]; then
+  echo "*** NOTE *** When asked to update your PATH, you should respond YES."
+  read -p "Press [ENTER] to continue ..."
+  bash Anaconda-1.9.2-Linux-x86_64.sh
+else
+  expect install-anaconda.expect  
+  source ${HOME}/.bashrc
+fi
 export PATH="${HOME}/anaconda/bin:$PATH"
 subtask "done"
 
@@ -193,3 +197,18 @@ pip install -r ocw-pip-dependencies.txt >> install_log
 header "Updating PYTHONPATH with ocw executables ..."
 echo "export PYTHONPATH=${ocw_path}:${ocw_path}/ocw" >> ${HOME}/.bashrc
 subtask "done"
+
+# Add a Matplotlib defaults file to allow non X-window plot mode generation
+# For more details, see: http://stackoverflow.com/questions/2801882/generating-a-png-with-matplotlib-when-display-is-undefined
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  mkdir -p ~/.config/matplotlib/
+  echo "backend: agg" >> ~/.config/matplotlib/matplotlibrc
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  mkdir -p ~/.matplotlib/
+  echo "backend: agg" >> ~/.matplotlib/matplotlibrc
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+  mkdir -p ~/.matplotlib
+  echo "backend: agg" >> ~/.matplotlib/matplotlibrc
+else
+  echo "WARNING: unable to detect OS, not configuring matplotlib defaults. Doing so is only necessary if you plan to run examples or your own code without any GUI or X-Window session. If you need to do this, see here for your OS-specific configuration: http://matplotlib.org/users/customizing.html"
+fi

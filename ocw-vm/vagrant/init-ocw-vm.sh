@@ -43,10 +43,12 @@ sudo apt-get install -y ubuntu-desktop
 
 # Use the Easy-OCW Ubuntu install script to get everything
 # else installed!
-git clone http://git-wip-us.apache.org/repos/asf/climate.git
+#git clone http://git-wip-us.apache.org/repos/asf/climate.git
+git clone https://github.com/riverma/climate.git
 
 # Copy the Easy-OCW install script for Ubuntu
-cp climate/easy-ocw/install-ubuntu.sh .
+cp climate/easy-oddcw/install-ubuntu.sh .
+
 # Copy the requirements files for conda and pip used by Easy-OCW
 cp climate/easy-ocw/*.txt .
 

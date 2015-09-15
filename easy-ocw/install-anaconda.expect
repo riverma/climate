@@ -1,0 +1,15 @@
+#!/usr/bin/expect --
+
+spawn bash Anaconda-1.9.2-Linux-x86_64.sh
+expect "Please, press ENTER to continue"
+send "\r"
+send "q"
+expect "Do you approve the license terms?"
+send "yes\r"
+expect "Anaconda will now be installed into this location"
+send "\r"
+set timeout 300 ;# wait up to 5 minutes for Anaconda to install
+expect "Do you wish the installer to prepend the Anaconda install location"
+send "yes\r"
+expect "Thank you for installing Anaconda!"
+send "\r"
