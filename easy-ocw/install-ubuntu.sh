@@ -191,7 +191,7 @@ cd
 # can be installed with Conda, but since none of them have an annoying
 # compiled component we just installed them with Pip.
 header "Installing additional Python packages"
-pip install -r ocw-pip-dependencies.txt >> install_log
+pip install -r ${ocw_path}/easy-ocw/ocw-pip-dependencies.txt >> install_log
 
 # Ensure that the climate code is included in the Python Path
 header "Updating PYTHONPATH with ocw executables ..."
